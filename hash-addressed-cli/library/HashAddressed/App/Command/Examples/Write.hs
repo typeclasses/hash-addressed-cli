@@ -19,6 +19,7 @@ import HashAddressed.HashFunction
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.Directory (WriteResult (..), WriteType (..))
 import Prelude (FilePath, IO)
+import Data.Foldable (fold)
 
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Trans.Except as Except
@@ -28,11 +29,16 @@ import qualified Data.ByteString as Strict.ByteString
 import qualified HashAddressed.Directory
 import qualified Options.Applicative as Options
 import qualified System.IO as IO
+import qualified Data.Sequence as Seq
+import qualified Control.Exception.Safe as Exception
+import qualified Data.Either as Either
+import qualified System.Directory as Directory
 
 writeCommand :: Command
 writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
     "Copy from the standard input stream to a hash-addressed store"
   where
+    parser :: Options.Parser (CommandAction ())
     parser = do
         optVerbosity :: Verbosity <- verbosityOption
 
@@ -61,7 +67,7 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
             hashFunction <-
                 case optInitializeStore of
                     True -> case optHashFunction of
-                        Nothing -> Except.throwE $ "--initialize requires --hash-function"
+                        Nothing -> Except.throwE $ Seq.singleton $ "--initialize requires --hash-function"
                         Just hf -> do
                             Monad.when optInitializeStore $ tryInitializeStore CreateIfNotPresent
                                 optVerbosity hf optStoreDirectory
@@ -69,7 +75,7 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                     False -> do
                         configHashFunction <- readHashFunctionFromConfig optStoreDirectory
                         case optHashFunction of
-                            Just hf | hf /= configHashFunction -> Except.throwE $
+                            Just hf | hf /= configHashFunction -> Except.throwE $ Seq.singleton $
                                 "--hash-function " <> showHashFunction hf <>
                                 " does not match hash function " <> showHashFunction configHashFunction
                                 <> " in " <> configFile optStoreDirectory
@@ -100,12 +106,15 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                                 True -> pure ()
                         loop
 
+            putNormalLn optVerbosity contentAddressedFile
+
             putVerboseLn optVerbosity case writeType of
-                AlreadyPresent -> "The file was already present in the \
-                    \store; no change was made."
+                AlreadyPresent -> "The file was already present in the store; no change was made."
                 NewContent -> "One new file was added to the store."
 
-            optLinks & traverse_ \link ->
-                _ -- todo
+            linkFailures <- fmap fold $ liftIO $ optLinks & traverse \linkToBeCreated ->
+                Exception.tryIO (Directory.createFileLink contentAddressedFile linkToBeCreated) <&> \case
+                    Either.Left _ -> Seq.singleton $ "Failed to create link " <> linkToBeCreated
+                    Either.Right () -> Seq.empty
 
-            putNormalLn optVerbosity contentAddressedFile
+            Monad.unless (Seq.null linkFailures) $ Except.throwE linkFailures

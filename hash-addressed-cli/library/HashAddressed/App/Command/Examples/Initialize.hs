@@ -16,6 +16,7 @@ initializeCommand :: Command
 initializeCommand =  Options.info (parser <**> Options.helper) $
     Options.progDesc "Initialize a hash-addressed store"
   where
+    parser :: Options.Parser (CommandAction ())
     parser = do
         optVerbosity <- verbosityOption
         optHashFunction <- hashFunctionOption

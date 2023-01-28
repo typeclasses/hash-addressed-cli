@@ -10,12 +10,12 @@ import HashAddressed.App.HashFunction.Naming
 import HashAddressed.App.Meta.Paths
 import HashAddressed.App.Verbosity.Printing
 import HashAddressed.App.Verbosity.Type
+import HashAddressed.App.Command.Type
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.HashFunction (HashFunction)
-import Prelude (FilePath, IO, String)
+import Prelude (FilePath)
 
-import qualified Control.Monad.Trans.Except as Except
 import qualified Data.ByteString as Strict.ByteString
 import qualified Data.Ini as INI
 import qualified Data.Text as Strict.Text
@@ -28,8 +28,7 @@ defaultConfigINI optHashFunction = INI.Ini mempty
     , (Strict.Text.pack "hash function",
       Strict.Text.pack (showHashFunction optHashFunction))]
 
-tryInitializeStore :: InitializationType -> Verbosity -> HashFunction -> FilePath
-    -> Except.ExceptT String IO ()
+tryInitializeStore :: InitializationType -> Verbosity -> HashFunction -> FilePath -> CommandAction ()
 tryInitializeStore initializationType optVerbosity optHashFunction optStoreDirectory = do
     liftIO (Directory.doesPathExist (metaDirectory optStoreDirectory)) >>= \case
         False -> initializeStore optHashFunction optStoreDirectory
@@ -41,7 +40,7 @@ tryInitializeStore initializationType optVerbosity optHashFunction optStoreDirec
 data InitializationType = CreateNew | CreateIfNotPresent
 
 {-| Assumes a store does not already exist -}
-initializeStore :: HashFunction -> FilePath -> Except.ExceptT String IO ()
+initializeStore :: HashFunction -> FilePath -> CommandAction ()
 initializeStore optHashFunction optStoreDirectory = do
     liftIO $ Directory.createDirectoryIfMissing True (metaDirectory optStoreDirectory)
     liftIO $ Strict.ByteString.writeFile (configFile optStoreDirectory) $

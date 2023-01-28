@@ -16,6 +16,7 @@ mainCommand :: Command
 mainCommand = Options.info (parser <**> Options.helper) $
     Options.progDesc "Hash-addressed file storage"
   where
+    parser :: Options.Parser (CommandAction ())
     parser = Options.subparser $
         Options.command "version" versionCommand <>
         Options.command "initialize" initializeCommand <>

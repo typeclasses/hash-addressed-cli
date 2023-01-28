@@ -51,6 +51,36 @@ $ sha256sum /tmp/demo/20b39ca6ca85b53be73920532fd6f9cc164317646995839e2e54a6871d
 ```
 
 
+Symbolic links
+-------------------------------------------------------------------------
+
+A place to put links for demonstration:
+
+```
+$ mkdir --parents /tmp/demo-links
+```
+
+You can use the `--link` option with the `write` command to create symbolic
+links to the hash-addressed content.
+
+```
+$ echo "whatever" | hash-addressed write --target-directory /tmp/demo --link /tmp/demo-links/link-1
+/tmp/demo/cd293be6cea034bd45a0352775a219ef5dc7825ce55d1f7dae9762d80ce64411
+```
+
+Observing that the link was written:
+
+```
+$ readlink /tmp/demo-links/link-1
+/tmp/demo/cd293be6cea034bd45a0352775a219ef5dc7825ce55d1f7dae9762d80ce64411
+```
+
+```
+$ cat /tmp/demo-links/link-1
+whatever
+```
+
+
 Verbosity
 -------------------------------------------------------------------------
 
@@ -60,15 +90,15 @@ the content was added or already present.
 ```
 $ echo "Test file 3" | hash-addressed write --target-directory /tmp/demo --verbose
 The hash function is sha256
-One new file was added to the store.
 /tmp/demo/efdbe264574c7440b80a2c4aaf15c18787a125b6223d05300841f32f46361e7f
+One new file was added to the store.
 ```
 
 ```
 $ echo "Test file 3" | hash-addressed write --target-directory /tmp/demo --verbose
 The hash function is sha256
-The file was already present in the store; no change was made.
 /tmp/demo/efdbe264574c7440b80a2c4aaf15c18787a125b6223d05300841f32f46361e7f
+The file was already present in the store; no change was made.
 ```
 
 

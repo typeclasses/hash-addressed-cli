@@ -16,5 +16,6 @@ versionCommand :: Command
 versionCommand = Options.info (parser <**> Options.helper) $
     Options.progDesc "Print version numbers"
   where
+    parser :: Options.Parser (CommandAction ())
     parser = pure do
         liftIO $ IO.putStrLn $ "hash-addressed 1"
