@@ -1,8 +1,8 @@
 cabal-version: 3.0
 
 name: hash-addressed-cli
-version: 1.0.1.0
-synopsis: Hash-addressed file storage
+version: 2.0.0.0
+synopsis: Hash-addressed file storage app
 category: Hash, Filesystem
 
 description:
