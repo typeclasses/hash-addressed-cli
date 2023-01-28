@@ -11,11 +11,11 @@ import qualified Options.Applicative as Options
 
 verboseOption :: Options.Parser Bool
 verboseOption = Options.switch $ Options.long "verbose" <> Options.help
-    "Print miscellaneous commentary to stderr"
+    "Print miscellaneous commentary to the standard error stream"
 
 quietOption :: Options.Parser Bool
 quietOption = Options.switch $ Options.long "quiet" <> Options.help
-    "Do not print normal output to stdout"
+    "Do not print normal output to the standard output stream"
 
 verbosityOption :: Options.Parser Verbosity
 verbosityOption = do

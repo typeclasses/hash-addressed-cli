@@ -2,7 +2,7 @@ module HashAddressed.App.HashFunction
   (
     {- * Naming -} readHashFunctionText, readHashFunctionString,
             showHashFunction, normalizeHashFunction,
-    {- * Options -} hashFunctionOption,
+    {- * Options -} hashFunctionRead, hashFunctionInstructions,
   )
   where
 

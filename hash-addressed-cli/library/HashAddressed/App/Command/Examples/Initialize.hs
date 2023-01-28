@@ -18,10 +18,14 @@ initializeCommand =  Options.info (parser <**> Options.helper) $
   where
     parser :: Options.Parser (CommandAction ())
     parser = do
-        optVerbosity <- verbosityOption
-        optHashFunction <- hashFunctionOption
         optStoreDirectory <- Options.strOption $ Options.long "directory" <>
             Options.help "Where the hash-addressed files are located"
-        pure do
-            tryInitializeStore CreateNew optVerbosity
-                optHashFunction optStoreDirectory
+
+        optHashFunction <- Options.option hashFunctionRead $
+            Options.long "hash-function" <>
+            Options.help hashFunctionInstructions
+
+        optVerbosity <- verbosityOption
+
+        pure $ tryInitializeStore CreateNew optVerbosity optHashFunction
+            optStoreDirectory

@@ -36,21 +36,14 @@ import qualified System.Directory as Directory
 
 writeCommand :: Command
 writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
-    "Copy from the standard input stream to a hash-addressed store"
+    "Copy from the standard input stream (or a file, see --source-file) \
+    \to a hash-addressed store (see --target-directory)"
   where
     parser :: Options.Parser (CommandAction ())
     parser = do
-        optVerbosity :: Verbosity <- verbosityOption
-
-        optHashFunction :: Maybe HashFunction <- Options.optional hashFunctionOption
-
         optStoreDirectory :: FilePath <-
             Options.strOption $ Options.long "target-directory" <>
                 Options.help "Where the hash-addressed files are located"
-
-        optInitializeStore :: Bool <-
-            Options.switch $ Options.long "initialize" <>
-                Options.help "Set up a hash-addressed store if one does not already exist"
 
         optSourceFile :: Maybe FilePath <-
             Options.optional $ Options.strOption $ Options.long "source-file" <>
@@ -60,8 +53,24 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
         optLinks :: [FilePath] <-
             Options.many $ Options.strOption $ Options.long "link" <>
                 Options.help "After writing, create a symbolic link at this path \
-                    \that points to the hash-addressed file. The process returns a \
-                    \non-zero exit code if any of these links cannot be created."
+                    \that points to the hash-addressed file. \
+                    \This option may be given more than once to create multiple links. \
+                    \The destination path path must be empty and its parent directory \
+                    \must already exist. The process returns a non-zero exit code if \
+                    \any of the links cannot be created."
+
+        optInitializeStore :: Bool <-
+            Options.switch $ Options.long "initialize" <>
+                Options.help "Set up a hash-addressed store if one does not already exist. \
+                \If this option is given, --hash-function is required."
+
+        optHashFunction :: Maybe HashFunction <- Options.optional $
+            Options.option hashFunctionRead $ Options.long "hash-function" <>
+                Options.help ("If --initialize is given, use this flag to specify the hash \
+                    \function. If a store exists, fail unless it used this hash function. "
+                    <> hashFunctionInstructions)
+
+        optVerbosity :: Verbosity <- verbosityOption
 
         pure do
             hashFunction <-
