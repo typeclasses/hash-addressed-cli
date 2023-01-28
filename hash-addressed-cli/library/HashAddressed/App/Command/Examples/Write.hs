@@ -3,16 +3,18 @@ module HashAddressed.App.Command.Examples.Write where
 import Essentials
 import HashAddressed.App.Command.Type
 import HashAddressed.App.Verbosity.Printing
+import HashAddressed.App.Verbosity.Type
 import HashAddressed.App.Verbosity.Options
 import HashAddressed.App.HashFunction.Options
 import HashAddressed.App.HashFunction.Naming
+import HashAddressed.HashFunction
 import HashAddressed.App.Meta.Initialization
 import HashAddressed.App.Meta.Reading
 import HashAddressed.App.Meta.Paths
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.Directory (WriteResult (..), WriteType (..))
-import Prelude (IO)
+import Prelude (IO, FilePath)
 
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Trans.Except as Except
@@ -28,15 +30,22 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
     "Copy from the standard input stream to a hash-addressed store"
   where
     parser = do
-        optVerbosity <- verbosityOption
-        optHashFunction <- Options.optional hashFunctionOption
-        optStoreDirectory <- Options.strOption $ Options.long "target-directory" <>
-            Options.help "Where the hash-addressed files are located"
-        optInitializeStore <- Options.switch $ Options.long "initialize" <>
-            Options.help "Set up a hash-addressed store if one does not already exist"
-        optSourceFile <- Options.optional $ Options.strOption $ Options.long "source-file" <>
-            Options.help "Path of file to copy to the store; if this option is not given, \
-                \will read from standard input stream instead"
+        optVerbosity :: Verbosity <- verbosityOption
+
+        optHashFunction :: Maybe HashFunction <- Options.optional hashFunctionOption
+
+        optStoreDirectory :: FilePath <-
+            Options.strOption $ Options.long "target-directory" <>
+                Options.help "Where the hash-addressed files are located"
+
+        optInitializeStore :: Bool <-
+            Options.switch $ Options.long "initialize" <>
+                Options.help "Set up a hash-addressed store if one does not already exist"
+
+        optSourceFile :: Maybe FilePath <-
+            Options.optional $ Options.strOption $ Options.long "source-file" <>
+                Options.help "Path of file to copy to the store; if this option is \
+                    \not given, will read from standard input stream instead"
         pure do
             hashFunction <-
                 case optInitializeStore of
@@ -69,15 +78,16 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                         (_, h) <- Resource.allocate (IO.openBinaryFile inputFile IO.ReadMode) IO.hClose
                         pure h
 
-                liftIO $ HashAddressed.Directory.writeStreaming store \(writeChunk :: Strict.ByteString -> m ()) -> do
-                  let
-                    loop :: m ()
-                    loop = do
-                      x <- liftIO $ Strict.ByteString.hGetSome input 4096
-                      case Strict.ByteString.null x of
-                          False -> writeChunk x *> loop
-                          True -> pure ()
-                  loop
+                liftIO $ HashAddressed.Directory.writeStreaming store
+                    \(writeChunk :: Strict.ByteString -> m ()) -> do
+                        let
+                          loop :: m ()
+                          loop = do
+                            x <- liftIO $ Strict.ByteString.hGetSome input 4096
+                            case Strict.ByteString.null x of
+                                False -> writeChunk x *> loop
+                                True -> pure ()
+                        loop
 
             putVerboseLn optVerbosity case writeType of
                 AlreadyPresent -> "The file was already present in the \
