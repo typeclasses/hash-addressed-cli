@@ -1,4 +1,8 @@
-module HashAddressed.App.HashFunction.Options where
+module HashAddressed.App.HashFunction.Options
+  (
+    hashFunctionOption,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.HashFunction.Naming

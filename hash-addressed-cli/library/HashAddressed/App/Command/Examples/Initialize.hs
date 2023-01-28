@@ -1,4 +1,8 @@
-module HashAddressed.App.Command.Examples.Initialize where
+module HashAddressed.App.Command.Examples.Initialize
+  (
+    initializeCommand,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.Command.Type

@@ -1,4 +1,8 @@
-module HashAddressed.App.Verbosity.Options where
+module HashAddressed.App.Verbosity.Options
+  (
+    verboseOption, quietOption, verbosityOption,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.Verbosity.Type

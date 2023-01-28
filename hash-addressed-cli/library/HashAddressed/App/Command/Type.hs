@@ -1,4 +1,8 @@
-module HashAddressed.App.Command.Type where
+module HashAddressed.App.Command.Type
+  (
+    Command,
+  )
+  where
 
 import Prelude (IO, String)
 

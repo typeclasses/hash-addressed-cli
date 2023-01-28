@@ -1,4 +1,8 @@
-module HashAddressed.App.Command.Examples.Version where
+module HashAddressed.App.Command.Examples.Version
+  (
+    versionCommand,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.Command.Type

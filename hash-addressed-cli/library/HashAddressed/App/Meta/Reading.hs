@@ -1,4 +1,8 @@
-module HashAddressed.App.Meta.Reading where
+module HashAddressed.App.Meta.Reading
+  (
+    readHashFunctionFromConfig,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.HashFunction.Naming

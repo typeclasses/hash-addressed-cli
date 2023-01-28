@@ -1,4 +1,9 @@
-module HashAddressed.App.Verbosity.Printing where
+module HashAddressed.App.Verbosity.Printing
+  (
+    putNormalLn,
+    putVerboseLn,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.Verbosity.Type

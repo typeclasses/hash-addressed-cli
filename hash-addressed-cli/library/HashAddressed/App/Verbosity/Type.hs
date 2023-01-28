@@ -1,4 +1,8 @@
-module HashAddressed.App.Verbosity.Type where
+module HashAddressed.App.Verbosity.Type
+  (
+    Verbosity (..),
+  )
+  where
 
 import Essentials
 

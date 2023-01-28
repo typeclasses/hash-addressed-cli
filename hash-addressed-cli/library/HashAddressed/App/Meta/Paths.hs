@@ -1,4 +1,8 @@
-module HashAddressed.App.Meta.Paths where
+module HashAddressed.App.Meta.Paths
+  (
+    metaDirectory, configFile,
+  )
+  where
 
 import Prelude (FilePath)
 import System.FilePath ((</>))

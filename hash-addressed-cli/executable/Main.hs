@@ -1,8 +1,8 @@
 module Main (main) where
 
 import Essentials
-import HashAddressed.App.Command.Examples.Main
 
+import HashAddressed.App.Command.Examples.Main (mainCommand)
 import Prelude (IO)
 
 import qualified Control.Monad.Trans.Except as Except
@@ -12,7 +12,7 @@ import qualified System.Exit as Exit
 
 main :: IO ()
 main = do
-    action <- Options.execParser command
+    action <- Options.execParser mainCommand
     Except.runExceptT action >>= \case
         Either.Left x -> Exit.die x
         Either.Right () -> pure ()

@@ -1,4 +1,8 @@
-module HashAddressed.App.Command.Examples.Write where
+module HashAddressed.App.Command.Examples.Write
+  (
+    writeCommand,
+  )
+  where
 
 import Essentials
 import HashAddressed.App.Command.Type

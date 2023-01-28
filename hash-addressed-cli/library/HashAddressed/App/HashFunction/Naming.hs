@@ -1,4 +1,12 @@
-module HashAddressed.App.HashFunction.Naming where
+module HashAddressed.App.HashFunction.Naming
+  (
+    readHashFunctionText,
+    readHashFunctionString,
+    showHashFunction,
+    normalizeHashFunction,
+    hashFunctions,
+  )
+  where
 
 import Essentials
 

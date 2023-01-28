@@ -54,16 +54,23 @@ library
     import: base
     hs-source-dirs: library
     exposed-modules:
+        HashAddressed.App.Command.Type
+        HashAddressed.App.Command.Examples
         HashAddressed.App.Command.Examples.Initialize
         HashAddressed.App.Command.Examples.Main
         HashAddressed.App.Command.Examples.Version
         HashAddressed.App.Command.Examples.Write
-        HashAddressed.App.Command.Type
+
+        HashAddressed.App.HashFunction
         HashAddressed.App.HashFunction.Naming
         HashAddressed.App.HashFunction.Options
+
+        HashAddressed.App.Verbosity
+        HashAddressed.App.Verbosity.Type
         HashAddressed.App.Verbosity.Options
         HashAddressed.App.Verbosity.Printing
-        HashAddressed.App.Verbosity.Type
+
+        HashAddressed.App.Meta
         HashAddressed.App.Meta.Initialization
         HashAddressed.App.Meta.Paths
         HashAddressed.App.Meta.Reading

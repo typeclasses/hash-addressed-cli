@@ -1,4 +1,9 @@
-module HashAddressed.App.Meta.Initialization where
+module HashAddressed.App.Meta.Initialization
+  (
+    defaultConfigINI, tryInitializeStore, initializeStore,
+    InitializationType (..),
+  )
+  where
 
 import Essentials
 import HashAddressed.App.HashFunction.Naming
