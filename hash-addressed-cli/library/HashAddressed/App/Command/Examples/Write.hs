@@ -2,19 +2,19 @@ module HashAddressed.App.Command.Examples.Write where
 
 import Essentials
 import HashAddressed.App.Command.Type
+import HashAddressed.App.HashFunction.Naming
+import HashAddressed.App.HashFunction.Options
+import HashAddressed.App.Meta.Initialization
+import HashAddressed.App.Meta.Paths
+import HashAddressed.App.Meta.Reading
+import HashAddressed.App.Verbosity.Options
 import HashAddressed.App.Verbosity.Printing
 import HashAddressed.App.Verbosity.Type
-import HashAddressed.App.Verbosity.Options
-import HashAddressed.App.HashFunction.Options
-import HashAddressed.App.HashFunction.Naming
 import HashAddressed.HashFunction
-import HashAddressed.App.Meta.Initialization
-import HashAddressed.App.Meta.Reading
-import HashAddressed.App.Meta.Paths
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.Directory (WriteResult (..), WriteType (..))
-import Prelude (IO, FilePath)
+import Prelude (FilePath, IO)
 
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Trans.Except as Except

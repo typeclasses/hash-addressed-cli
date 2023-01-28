@@ -1,10 +1,10 @@
 module HashAddressed.App.Command.Examples.Main where
 
 import Essentials
-import HashAddressed.App.Command.Type
-import HashAddressed.App.Command.Examples.Write
-import HashAddressed.App.Command.Examples.Version
 import HashAddressed.App.Command.Examples.Initialize
+import HashAddressed.App.Command.Examples.Version
+import HashAddressed.App.Command.Examples.Write
+import HashAddressed.App.Command.Type
 
 import qualified Options.Applicative as Options
 

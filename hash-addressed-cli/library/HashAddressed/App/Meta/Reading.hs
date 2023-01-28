@@ -1,13 +1,13 @@
 module HashAddressed.App.Meta.Reading where
 
 import Essentials
+import HashAddressed.App.HashFunction.Naming
 import HashAddressed.App.Meta.Paths
 import HashAddressed.App.Meta.Version
-import HashAddressed.App.HashFunction.Naming
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.HashFunction (HashFunction)
-import Prelude (IO, FilePath, String)
+import Prelude (FilePath, IO, String)
 
 import qualified Control.Monad.Trans.Except as Except
 import qualified Data.ByteString as Strict.ByteString

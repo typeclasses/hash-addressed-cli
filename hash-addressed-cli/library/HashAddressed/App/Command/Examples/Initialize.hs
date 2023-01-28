@@ -2,9 +2,9 @@ module HashAddressed.App.Command.Examples.Initialize where
 
 import Essentials
 import HashAddressed.App.Command.Type
-import HashAddressed.App.Verbosity.Options
 import HashAddressed.App.HashFunction.Options
 import HashAddressed.App.Meta.Initialization
+import HashAddressed.App.Verbosity.Options
 
 import qualified Options.Applicative as Options
 

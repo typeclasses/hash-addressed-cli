@@ -4,3 +4,4 @@ dist-*
 *.yaml
 result
 result-*
+!/.stylish-haskell.yaml

@@ -1,14 +1,14 @@
 module HashAddressed.App.Meta.Initialization where
 
 import Essentials
-import HashAddressed.App.Verbosity.Type
+import HashAddressed.App.HashFunction.Naming
 import HashAddressed.App.Meta.Paths
 import HashAddressed.App.Verbosity.Printing
-import HashAddressed.App.HashFunction.Naming
+import HashAddressed.App.Verbosity.Type
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.HashFunction (HashFunction)
-import Prelude (IO, FilePath, String)
+import Prelude (FilePath, IO, String)
 
 import qualified Control.Monad.Trans.Except as Except
 import qualified Data.ByteString as Strict.ByteString
