@@ -7,6 +7,7 @@ module HashAddressed.App.Command.Examples.Version
 import Essentials
 import HashAddressed.App.Command.Type
 
+import HashAddressed.App.Version (version)
 import Control.Monad.IO.Class (liftIO)
 
 import qualified Options.Applicative as Options
@@ -18,4 +19,4 @@ versionCommand = Options.info (parser <**> Options.helper) $
   where
     parser :: Options.Parser (CommandAction ())
     parser = pure do
-        liftIO $ IO.putStrLn $ "hash-addressed 1"
+        liftIO $ IO.putStrLn $ "hash-addressed " <> version
