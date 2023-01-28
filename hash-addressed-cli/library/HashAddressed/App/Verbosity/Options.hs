@@ -15,7 +15,7 @@ verboseOption = Options.switch $ Options.long "verbose" <> Options.help
 
 quietOption :: Options.Parser Bool
 quietOption = Options.switch $ Options.long "quiet" <> Options.help
-    "Print nothing but fatal errors"
+    "Do not print normal output to stdout"
 
 verbosityOption :: Options.Parser Verbosity
 verbosityOption = do

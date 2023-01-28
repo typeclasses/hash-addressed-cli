@@ -84,8 +84,8 @@ whatever
 Verbosity
 -------------------------------------------------------------------------
 
-With the `--verbose` flag we get some additional information, including whether
-the content was added or already present.
+Use the `--verbose` flag to get some additional information, printed to the
+standard error stream.
 
 ```
 $ echo "Test file 3" | hash-addressed write --target-directory /tmp/demo --verbose
@@ -99,6 +99,25 @@ $ echo "Test file 3" | hash-addressed write --target-directory /tmp/demo --verbo
 The hash function is sha256
 /tmp/demo/efdbe264574c7440b80a2c4aaf15c18787a125b6223d05300841f32f46361e7f
 The file was already present in the store; no change was made.
+```
+
+Use the `--quiet` flag to suppress what is normally printed to the standard
+output stream.
+
+```
+$ echo "Test file 4" | hash-addressed write --target-directory /tmp/demo --quiet
+```
+
+Fatal errors resulting in non-zero status code are always printed to the
+standard error stream regardless of what command-line options are given. In the
+following demonstration, the `--link` instruction succeeds the first time
+(printing nothing because we use `--quiet`), but we see an error message the
+second time because the link already exists.
+
+```
+$ echo "Test file 4" | hash-addressed write --target-directory /tmp/demo --quiet --link /tmp/demo-links/link-2
+$ echo "Test file 4" | hash-addressed write --target-directory /tmp/demo --quiet --link /tmp/demo-links/link-2
+Failed to create link /tmp/demo-links/link-2
 ```
 
 
