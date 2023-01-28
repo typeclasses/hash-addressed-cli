@@ -50,6 +50,13 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
             Options.optional $ Options.strOption $ Options.long "source-file" <>
                 Options.help "Path of file to copy to the store; if this option is \
                     \not given, will read from standard input stream instead"
+
+        optLinks :: [FilePath] <-
+            Options.many $ Options.strOption $ Options.long "link" <>
+                Options.help "After writing, create a symbolic link at this path \
+                    \that points to the hash-addressed file. The process returns a \
+                    \non-zero exit code if any of these links cannot be created."
+
         pure do
             hashFunction <-
                 case optInitializeStore of
@@ -97,5 +104,8 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                 AlreadyPresent -> "The file was already present in the \
                     \store; no change was made."
                 NewContent -> "One new file was added to the store."
+
+            optLinks & traverse_ \link ->
+                _ -- todo
 
             putNormalLn optVerbosity contentAddressedFile
