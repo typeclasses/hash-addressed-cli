@@ -13,6 +13,7 @@ sourceOverrides = haskell.lib.packageSourceOverrides {
 };
 
 depOverrides = new: old: {
+    gambler = new.callPackage ./nix/gambler.nix {};
     hash-addressed = new.callPackage ./nix/hash-addressed.nix {};
     quaalude = new.callPackage ./nix/quaalude.nix {};
 };
