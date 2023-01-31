@@ -14,7 +14,6 @@ import HashAddressed.App.Meta.Reading
 import HashAddressed.App.Verbosity.Options
 import HashAddressed.App.Verbosity.Printing
 import HashAddressed.App.Verbosity.Type
-import HashAddressed.HashFunction
 
 import Control.Monad.IO.Class (liftIO)
 import HashAddressed.Directory (WriteResult (..), WriteType (..))
@@ -24,7 +23,6 @@ import Data.Foldable (fold)
 import qualified Control.Monad as Monad
 import qualified Control.Monad.Trans.Except as Except
 import qualified Control.Monad.Trans.Resource as Resource
-import qualified Data.ByteString as Strict
 import qualified Data.ByteString as Strict.ByteString
 import qualified HashAddressed.Directory
 import qualified Options.Applicative as Options
@@ -33,6 +31,7 @@ import qualified Data.Sequence as Seq
 import qualified Control.Exception.Safe as Exception
 import qualified Data.Either as Either
 import qualified System.Directory as Directory
+import qualified Pipes
 
 writeCommand :: Command
 writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
@@ -64,7 +63,7 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                 Options.help "Set up a hash-addressed store if one does not already exist. \
                 \If this option is given, --hash-function is required."
 
-        optHashFunction :: Maybe HashFunction <- Options.optional $
+        optHashFunction :: Maybe HashFunctionName <- Options.optional $
             Options.option hashFunctionRead $ Options.long "hash-function" <>
                 Options.help ("If --initialize is given, use this flag to specify the hash \
                     \function. If a store exists, fail unless it used this hash function. "
@@ -94,9 +93,9 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
             putVerboseLn optVerbosity $ "The hash function is "
                 <> showHashFunction hashFunction
 
-            let store = HashAddressed.Directory.init hashFunction optStoreDirectory
+            let store = HashAddressed.Directory.Directory optStoreDirectory (resolveHashFunction hashFunction)
 
-            WriteResult{ contentAddressedFile, writeType } <- liftIO $ Resource.runResourceT @IO do
+            ((), WriteResult{ hashAddressedFile, writeType }) <- liftIO $ Resource.runResourceT @IO do
 
                 input <- case optSourceFile of
                     Nothing -> pure IO.stdin
@@ -104,25 +103,22 @@ writeCommand = Options.info (parser <**> Options.helper) $ Options.progDesc
                         (_, h) <- Resource.allocate (IO.openBinaryFile inputFile IO.ReadMode) IO.hClose
                         pure h
 
-                liftIO $ HashAddressed.Directory.writeStreaming store
-                    \(writeChunk :: Strict.ByteString -> m ()) -> do
-                        let
-                          loop :: m ()
-                          loop = do
+                liftIO $ HashAddressed.Directory.writeStream store $
+                    let
+                        loop = do
                             x <- liftIO $ Strict.ByteString.hGetSome input 4096
-                            case Strict.ByteString.null x of
-                                False -> writeChunk x *> loop
-                                True -> pure ()
+                            Monad.unless (Strict.ByteString.null x) (Pipes.yield x *> loop)
+                    in
                         loop
 
-            putNormalLn optVerbosity contentAddressedFile
+            putNormalLn optVerbosity hashAddressedFile
 
             putVerboseLn optVerbosity case writeType of
                 AlreadyPresent -> "The file was already present in the store; no change was made."
                 NewContent -> "One new file was added to the store."
 
             linkFailures <- fmap fold $ liftIO $ optLinks & traverse \linkToBeCreated ->
-                Exception.tryIO (Directory.createFileLink contentAddressedFile linkToBeCreated) <&> \case
+                Exception.tryIO (Directory.createFileLink hashAddressedFile linkToBeCreated) <&> \case
                     Either.Left _ -> Seq.singleton $ "Failed to create link " <> linkToBeCreated
                     Either.Right () -> Seq.empty
 

@@ -11,7 +11,6 @@ import HashAddressed.App.Meta.Version
 import HashAddressed.App.Command.Type
 
 import Control.Monad.IO.Class (liftIO)
-import HashAddressed.HashFunction (HashFunction)
 import Prelude (FilePath)
 
 import qualified Data.Sequence as Seq
@@ -23,7 +22,7 @@ import qualified Data.Ini as INI
 import qualified Data.Text as Strict.Text
 import qualified Data.Text.Encoding as Strict.Text
 
-readHashFunctionFromConfig :: FilePath -> CommandAction HashFunction
+readHashFunctionFromConfig :: FilePath -> CommandAction HashFunctionName
 readHashFunctionFromConfig storeDirectory = do
 
     bs <- liftIO $ Strict.ByteString.readFile (configFile storeDirectory)

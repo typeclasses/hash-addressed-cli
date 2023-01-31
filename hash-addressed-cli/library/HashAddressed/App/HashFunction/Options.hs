@@ -8,14 +8,13 @@ module HashAddressed.App.HashFunction.Options
 import Essentials
 import HashAddressed.App.HashFunction.Naming
 
-import HashAddressed.HashFunction (HashFunction)
 import Prelude (String)
 
 import qualified Control.Monad as Monad
 import qualified Data.List as List
 import qualified Options.Applicative as Options
 
-hashFunctionRead :: Options.ReadM HashFunction
+hashFunctionRead :: Options.ReadM HashFunctionName
 hashFunctionRead = do
     string <- Options.str
     case List.lookup (normalizeHashFunction string) hashFunctions of
