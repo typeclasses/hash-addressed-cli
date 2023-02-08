@@ -4,8 +4,8 @@
 }:
 mkDerivation {
   pname = "hash-addressed";
-  version = "0.1.0.0";
-  sha256 = "16d40b4f03dcc0596884e64f889d2911b581dd8ab528519a6483876040cf2e44";
+  version = "0.2.0.0";
+  sha256 = "28afae8ed1c8fa51f73a5d0f20a238e31ca6226f00e6abff20dd289e7543c06d";
   libraryHaskellDepends = [
     base base16-bytestring bytestring cryptohash-sha256 directory
     filepath gambler mtl pipes quaalude resourcet temporary

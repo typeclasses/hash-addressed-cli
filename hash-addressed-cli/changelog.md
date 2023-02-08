@@ -4,6 +4,10 @@ Version format `A.B.C.D`:
 - Raise `B` for breaking changes to the library
 - Raise `C` for reverse-compatible changes to the library
 
+## 2.1.0.1 (2023-02-08)
+
+Raise `hash-addressed` version to `0.2`
+
 ## 2.1.0.0 (2023-01-31)
 
 Raise `hash-addressed` version to `0.1`
