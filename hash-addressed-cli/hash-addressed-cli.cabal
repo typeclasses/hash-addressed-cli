@@ -35,6 +35,8 @@ common base
         LambdaCase
         NamedFieldPuns
         NoImplicitPrelude
+    other-modules:
+        Paths_hash_addressed_cli
     build-depends:
       , base ^>= 4.16 || ^>= 4.17
       , bytestring ^>= 0.11.3
